@@ -152,6 +152,16 @@ class PlayingVC: UIViewController
             generateCardView(withPlayer: player)
         }
         updateDisplayPoint()
+        
+        if players[0].allCardAmount == 21
+        {
+            finished(withStauts: .lose)
+        }
+        
+        if players[1].allCardAmount == 21
+        {
+            finished(withStauts: .win)
+        }
     }
     
     func updateDisplayPoint()
@@ -164,20 +174,22 @@ class PlayingVC: UIViewController
     //再發一張
     @IBAction func hit(_ sender: UIButton)
     {
-        if players[1].cards.count < 6
+        if players[1].cards.count < 5
         {
             players[1].cards.append(deal(.face))
             generateCardView(withPlayer: players[1])
             updateDisplayPoint()
         }
-        else
-        {
-            finished(withStauts: .win)
-        }
         
         if players[1].isBusting == true
         {
             finished(withStauts: .lose)
+            return
+        }
+        
+        if players[1].cards.count == 5
+        {
+            finished(withStauts: .win)
         }
     }
     
@@ -208,17 +220,23 @@ class PlayingVC: UIViewController
     {
         for _ in 1...3
         {
-            players[0].cards.append(deal(.face))
-            generateCardView(withPlayer: players[0])
-            updateDisplayPoint()
-            
-            if players[0].allCardAmount > 16
+            if players[0].allCardAmount > 17
             {
                 break
             }
+            
+            players[0].cards.append(deal(.face))
+            generateCardView(withPlayer: players[0])
+            updateDisplayPoint()
         }
+        
         if players[0].isBusting == false
         {
+            if players[0].cards.count == 5
+            {
+                finished(withStauts: .lose)
+                return
+            }
             settle()
         }
         else
@@ -230,11 +248,15 @@ class PlayingVC: UIViewController
 
     func settle()
     {
-        if players[0].allCardAmount >= players[1].allCardAmount
+        if players[0].allCardAmount > players[1].allCardAmount
         {
             finished(withStauts: .lose)
         }
-        else
+        else if players[0].allCardAmount == players[1].allCardAmount
+        {
+            finished(withStauts: .drew)
+        }
+        else if players[0].allCardAmount < players[1].allCardAmount
         {
             finished(withStauts: .win)
         }

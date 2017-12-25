@@ -9,23 +9,17 @@
 import Foundation
 import AudioToolbox
 
-//MARK:Player Object
-protocol PlayerDelegate
-{
-    func handleBusting(player:Player)
-}
-
 class Player
 {
     var isMaker: Bool
     var isBusting: Bool = false
-    var delegate: PlayerDelegate?
     var cards = [Card]()
     {
         didSet {
             print(countingAllCardPoint())
         }
     }
+    
     var openCardAmount: Int
     {
         return countingOpenCardPoint()
@@ -52,7 +46,7 @@ class Player
         }
         
         
-        if result > 21 && aceArray.count != 0
+        if result > 21 && !aceArray.isEmpty
         {
             for _ in 1...aceArray.count
             {
@@ -78,15 +72,24 @@ class Player
         var result = 0
         var aceArray = [Card]()
         
-        for card in cards
+        for card in cards where card.status == .face
         {
-            if card.status == .face
+            if card.point == 11
             {
-                if card.point == 11
+                aceArray.append(card)
+            }
+            result += card.point
+        }
+        
+        if result > 21 && !aceArray.isEmpty
+        {
+            for _ in 1...aceArray.count
+            {
+                result = result - 10
+                if !(result > 21)
                 {
-                    aceArray.append(card)
+                    return result
                 }
-                result += card.point
             }
         }
         return result
@@ -114,32 +117,23 @@ class Card
     var number:Int
     var status:CardStatus
     var description: String
-        
     {
         var result = ""
         switch suit
         {
-        case 1:
-            result = "♠︎"
-        case 2:
-            result = "♥︎"
-        case 3:
-            result = "♦︎"
-        case 4:
-            result = "♣︎"
+        case 1: result = "♠︎"
+        case 2: result = "♥︎"
+        case 3: result = "♦︎"
+        case 4: result = "♣︎"
         default:
             break
         }
         
         switch number {
-        case 1:
-            result = result + "A"
-        case 11:
-            result = result + "J"
-        case 12:
-            result = result + "Q"
-        case 13:
-            result = result + "K"
+        case 1: result = result + "A"
+        case 11: result = result + "J"
+        case 12: result = result + "Q"
+        case 13: result = result + "K"
         default:
             result = "\(result)\(number)"
         }

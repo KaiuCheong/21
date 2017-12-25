@@ -24,7 +24,8 @@ class CardView: UIView
         generateUI()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder)
+    {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -32,6 +33,7 @@ class CardView: UIView
     {
         self.backgroundColor = .white
 
+        //花色及數字
         faceLabel.frame = self.bounds
         faceLabel.textAlignment = .center
         faceLabel.text = cardInfo.description
@@ -43,15 +45,19 @@ class CardView: UIView
         }
         addSubview(faceLabel)
         
+        //牌背
         dosImage.frame = self.bounds
         updateCardStatus()
         addSubview(dosImage)
         
-        let longPress = UILongPressGestureRecognizer(target:self,action:#selector(seeLastCard(_:)))
-        longPress.minimumPressDuration = 0
-        self.addGestureRecognizer(longPress)
+        //如果為蓋著的牌就加上手勢讓（使用者可以看底牌）
+        if cardInfo.status == .dos
+        {
+            let longPress = UILongPressGestureRecognizer(target:self,action:#selector(seeLastCard(_:)))
+            longPress.minimumPressDuration = 0
+            self.addGestureRecognizer(longPress)
+        }
     }
-
     
     @objc func seeLastCard(_ sender: UILongPressGestureRecognizer)
     {
