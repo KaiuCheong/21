@@ -23,6 +23,14 @@ class PlayingVC: UIViewController
     var makerDidGenerateNumber = 0
     var playerDidGenerateNumber = 0
     var makerLastCardView: CardView?
+    var canOperating:Bool = false
+    {
+        didSet {
+            surrenderButton.isHidden = !canOperating
+            hitButton.isHidden = !canOperating
+            standButton.isHidden = !canOperating
+        }
+    }
 
     @IBOutlet weak var pointTitle: UILabel!
     @IBOutlet weak var startButton: UIButton!
@@ -132,7 +140,7 @@ class PlayingVC: UIViewController
                 view.removeFromSuperview()
             }
         }
-        setPlayerOperating(enable: true)
+        canOperating = true
 
         sender.isHidden = true
         pointTitle.isHidden = false
@@ -197,24 +205,16 @@ class PlayingVC: UIViewController
     //停止發牌
     @IBAction func stand(_ sender: UIButton)
     {
-        setPlayerOperating(enable: false)
+        canOperating = false
         runMaker()
     }
     
     //投降
     @IBAction func surrender(_ sender: UIButton)
     {
-        setPlayerOperating(enable: false)
+        canOperating = false
         finished(withStauts: .lose)
     }
-    
-    func setPlayerOperating(enable:Bool)
-    {
-        surrenderButton.isEnabled = enable
-        hitButton.isEnabled = enable
-        standButton.isEnabled = enable
-    }
-    
     
     func runMaker()
     {
@@ -282,8 +282,7 @@ class PlayingVC: UIViewController
         case .drew:
             statusLabel.text = "Drew"
         }
-        setPlayerOperating(enable: false)
-
+        canOperating = false
         makerPointLabel.text = "\(players[0].allCardAmount)"
         makerLastCardView?.dosImage.isHidden = true
         startButton.isHidden = false

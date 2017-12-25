@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "21/Controller/PlayingVC.swift"
-            timestampString = "535865665.481467"
+            timestampString = "535866547.495643"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "177"
-            endingLineNumber = "177"
+            startingLineNumber = "183"
+            endingLineNumber = "183"
             landmarkName = "hit(_:)"
             landmarkType = "7">
          </BreakpointContent>
